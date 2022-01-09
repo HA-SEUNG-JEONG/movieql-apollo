@@ -20,6 +20,7 @@ export default () => {
       id: +id,
     },
   });
+
   if (loading) {
     return "loading";
   }
