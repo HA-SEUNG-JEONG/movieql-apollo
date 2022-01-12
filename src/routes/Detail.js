@@ -62,7 +62,6 @@ export default () => {
   const { loading, data } = useQuery(GET_MOVIE, {
     variables: { id: +id },
   });
-  console.log(data);
   return (
     <Container>
       <Column>
