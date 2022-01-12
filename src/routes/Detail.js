@@ -1,16 +1,18 @@
+import React from "react";
 import { useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 const GET_MOVIE = gql`
-  # $가 꼭 필요함
   query getMovie($id: Int!) {
     movie(id: $id) {
+      id
       title
       medium_cover_image
       language
       rating
       description_intro
+      isLiked @client
     }
     suggestions(id: $id) {
       id
@@ -60,20 +62,20 @@ const Poster = styled.div`
 export default () => {
   const { id } = useParams();
   const { loading, data } = useQuery(GET_MOVIE, {
-    variables: { id: +id },
+    variables: { id: parseInt(id) },
   });
   return (
     <Container>
       <Column>
-        <Title>{loading ? "Loading..." : data.movie.title}</Title>
-        {!loading && (
-          <>
-            <Subtitle>
-              {data?.movie?.movie?.language} · {data?.movie?.rating}
-            </Subtitle>
-            <Description>{data?.movie?.description_intro} </Description>
-          </>
-        )}
+        <Title>
+          {loading
+            ? "Loading..."
+            : `${data.movie.title} ${data.movie.isLiked ? "💖" : "😞"}`}
+        </Title>
+        <Subtitle>
+          {data?.movie?.language} · {data?.movie?.rating}
+        </Subtitle>
+        <Description>{data?.movie?.description_intro}</Description>
       </Column>
       <Poster bg={data?.movie?.medium_cover_image}></Poster>
     </Container>
